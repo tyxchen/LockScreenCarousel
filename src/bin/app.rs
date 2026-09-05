@@ -1,7 +1,8 @@
 use std::cell::Cell;
+use std::rc::Rc;
 use windows::core::*;
-use windows_reactor::*;
 use windows::Win32::{System::Com::*, UI::Shell::*};
+use windows_reactor::*;
 
 use lock_screen_carousel::{CarouselChooseType, CarouselTrigger, registry::*, task_scheduler::*};
 
@@ -85,6 +86,7 @@ struct AppComponent {
     selected_photo: Option<usize>,
     choose_type: CarouselChooseType,
     window_size: WindowSize,
+    first_run: Rc<Cell<bool>>,
 }
 
 impl Component for AppComponent {
@@ -100,6 +102,7 @@ impl Component for AppComponent {
             selected_photo: None,
             choose_type: get_carousel_choose_type().unwrap_or(CarouselChooseType::Iterate),
             window_size: WindowSize { width: 1200.0, height: 800.0 },
+            first_run: Rc::new(Cell::new(true)),
         }
     }
 
@@ -119,17 +122,15 @@ impl Component for AppComponent {
         {
             let trigger = self.trigger;
             let interval = self.interval;
-            cx.use_effect("trigger", self.trigger, move || {
+            let first_run = Rc::clone(&self.first_run);
+            cx.use_effect("trigger", (self.trigger, self.interval), move || {
                 set_carousel_trigger(trigger).unwrap();
                 set_carousel_interval(interval).unwrap();
-                schedule_task(trigger, interval).unwrap();
-                None
-            });
-            let trigger = self.trigger;
-            let interval = self.interval;
-            cx.use_effect("interval", self.interval, move || {
-                set_carousel_interval(interval).unwrap();
-                schedule_task(trigger, interval).unwrap();
+                if !first_run.get() {
+                    schedule_task(trigger, interval).unwrap();
+                } else {
+                    first_run.set(false);
+                }
                 None
             });
             let choose_type = self.choose_type;
