@@ -1,0 +1,33 @@
+[package]
+name = "lock_screen_carousel"
+version = "0.1.0"
+edition = "2024"
+publish = false
+default-run = "app"
+
+[dependencies]
+rand = { version = "0.10", features = ["thread_rng"] }
+windows = {
+    version = ">=0.59, <=0.62",
+    features = [
+        "Storage_Streams",
+        "System",
+        "System_UserProfile",
+        "Win32_Foundation",
+        "Win32_Security_Authentication_Identity",
+        "Win32_System_Com",
+        "Win32_System_Ole",
+        "Win32_System_TaskScheduler",
+        "Win32_System_Variant",
+        "Win32_UI_Shell",
+        "Win32_UI_Shell_Common",
+    ],
+}
+windows-future = { version = "0.3.2" }
+windows-reactor = { version = "0.100.0" }
+windows-registry = { version = "0.100.0" }
+windows-time = { version = "0.100.0" }
+windows-window = { version = "0.100.0" }
+
+[build-dependencies]
+windows-reactor-setup = { version = "0.100.0" }
