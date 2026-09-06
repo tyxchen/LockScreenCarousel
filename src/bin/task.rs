@@ -37,7 +37,8 @@ fn choose_random_photo(photos: Vec<String>) -> Result<()> {
         return choose_photo(&chosen_path);
     }
 
-    Err(Error::empty())
+    // no photos, treat as successful
+    Ok(())
 }
 
 const WS_EX_TOOLWINDOW: u32 = 0x80;

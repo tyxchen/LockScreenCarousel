@@ -13,7 +13,7 @@ fn get_user_name() -> Result<BSTR> {
         if GetUserNameExW(NameSamCompatible, Some(user_name), &mut user_name_len) {
             Ok(BSTR::from_wide(user_name.as_wide()))
         } else {
-            Err(Error::empty())
+            Err(Error::from_thread())
         }
     }
 }

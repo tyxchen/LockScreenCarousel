@@ -3,13 +3,18 @@ pub mod task_scheduler;
 pub mod utils;
 
 #[repr(u32)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum CarouselTrigger {
     Never = 0,
     Interval = 1,
     Lock = 2,
 }
 
+impl From<CarouselTrigger> for u32 {
+    fn from(value: CarouselTrigger) -> Self {
+        value as u32
+    }
+}
 impl From<u32> for CarouselTrigger {
     fn from(value: u32) -> Self {
         match value {
@@ -21,12 +26,17 @@ impl From<u32> for CarouselTrigger {
 }
 
 #[repr(u32)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum CarouselChooseType {
     Iterate = 0,
     Random = 1
 }
 
+impl From<CarouselChooseType> for u32 {
+    fn from(value: CarouselChooseType) -> Self {
+        value as u32
+    }
+}
 impl From<u32> for CarouselChooseType {
     fn from(value: u32) -> Self {
         match value {
